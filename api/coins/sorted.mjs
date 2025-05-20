@@ -1,5 +1,6 @@
 import { validateRequestParams } from "../../functions/utility/validators/validate-request-params.mjs";
-import { fetchDominantCoinsFromRedis } from "../../functions/coins/fetch-dominant-coins-from-redis.mjs";
+import { filterCoinsByDominaceCoinsFromRedis } from "../../functions/coins/filter-coins-by-dominance.mjs";
+import { filterCoinsAgainstBlackList } from "../../functions/coins/filter-coins-against-black-list.mjs";
 
 export const config = {
   runtime: "edge",
@@ -19,15 +20,31 @@ export default async function handler(request) {
 
     const { coinType, dominant } = params;
 
-    const coins = await fetchDominantCoinsFromRedis(coinType, dominant);
+    // Fetch coins filtered by dominance
+    const { binanceCoins, bybitCoins } =
+      await filterCoinsByDominaceCoinsFromRedis(dominant);
 
-    return new Response(JSON.stringify({ coins }), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
+    const {
+      binanceCoins: filteredBinanceCoins,
+      bybitCoins: filteredBybitCoins,
+    } = await filterCoinsAgainstBlackList(coinType, {
+      binanceCoins,
+      bybitCoins,
     });
+
+    return new Response(
+      JSON.stringify({
+        binanceCoins: filteredBinanceCoins,
+        bybitCoins: filteredBybitCoins,
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
+    );
   } catch (error) {
     return new Response(
       JSON.stringify({ error: "Server error", details: error.message }),
