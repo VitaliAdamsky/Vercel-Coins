@@ -1,5 +1,5 @@
 import { validateRequestParams } from "../../functions/utility/validators/validate-request-params.mjs";
-import { fetchSortedCoinsFromRedis } from "../../functions/coins/fetch-sorted-coins-from-redis.mjs";
+import { fetchDominantCoinsFromRedis } from "../../functions/coins/fetch-dominant-coins-from-redis.mjs";
 
 export const config = {
   runtime: "edge",
@@ -19,7 +19,7 @@ export default async function handler(request) {
 
     const { coinType, dominant } = params;
 
-    const coins = await fetchSortedCoinsFromRedis(coinType, dominant);
+    const coins = await fetchDominantCoinsFromRedis(coinType, dominant);
 
     return new Response(JSON.stringify({ coins }), {
       status: 200,
