@@ -18,6 +18,7 @@ export function validateRequestParams(url) {
   const DEFAULT_LIMIT = 53;
   const DEFAULT_COIN_TYPE = dataKeys.perp;
   const DEFAULT_DOMINANT = exchanges.Binance;
+  const DEFAULT_EXCHANGE = exchanges.Binance;
 
   const urlObj = new URL(url);
 
@@ -26,6 +27,7 @@ export function validateRequestParams(url) {
 
   let coinType = urlObj.searchParams.get("coinType");
   let dominant = urlObj.searchParams.get("dominant");
+  let exchange = urlObj.searchParams.get("exchange");
 
   const jsonError = (message, details) =>
     new Response(JSON.stringify({ error: message, ...details }), {
@@ -71,11 +73,22 @@ export function validateRequestParams(url) {
     dominant = DEFAULT_DOMINANT;
   }
 
+  if (exchange) {
+    if (!validExchanges.includes(exchange)) {
+      return jsonError("Invalid 'exchange'", {
+        supported: validExchanges,
+      });
+    }
+  } else {
+    dominant = DEFAULT_EXCHANGE;
+  }
+
   // ✅ All valid
   return {
     timeframe,
     limit,
     coinType,
     dominant,
+    exchange,
   };
 }

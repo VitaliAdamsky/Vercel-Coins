@@ -20,7 +20,7 @@ Description: Fetches an array of Coin objects from Redis, sorted by the dominant
 Parameters:
 coinType: "perp" | "spot"
 dominant: "Binance" | "Bybit"
-Returns: {bybitPerpCoins: Coin[], binancePerpCoins: Coin[]} or {bybitSpotCoins: Coin[], binanceSpotCoins: Coin[]}
+Returns: {coins:{bybitPerpCoins: Coin[], binancePerpCoins: Coin[]}} or {coins:{bybitSpotCoins: Coin[], binanceSpotCoins: Coin[]}}
 
 Fetch Failed Coins from Redis
 Endpoint: api/coins/failed
