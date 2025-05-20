@@ -22,15 +22,19 @@ export const fetchDominantCoinsFromRedis = async (coinType, dominant) => {
 
   if (coinType === "perp") {
     console.log("dataKey By Check", dataKeys.failedBybitPerpSymbols);
-    const failedBinancePerpSymbols = blackListData.perp.binance;
-    const failedBybitPerpSymbols = blackListData.perp.bybit;
+    const blackListBinancePerpSymbols = await getDataFromRedis(
+      dataKeys.failedBinancePerpSymbols
+    );
+    const blackListBybitPerpSymbols = await getDataFromRedis(
+      dataKeys.failedBybitPerpSymbols
+    );
 
     const binancePerpCoins = binanceCoins
-      .filter((c) => !failedBinancePerpSymbols.includes(c.symbol))
+      .filter((c) => !blackListBinancePerpSymbols.includes(c.symbol))
       .sort((a, b) => a.symbol.localeCompare(b.symbol));
 
     const bybitPerpCoins = bybitCoins
-      .filter((c) => !failedBybitPerpSymbols.includes(c.symbol))
+      .filter((c) => !blackListBybitPerpSymbols.includes(c.symbol))
       .sort((a, b) => a.symbol.localeCompare(b.symbol));
 
     return {
@@ -38,15 +42,18 @@ export const fetchDominantCoinsFromRedis = async (coinType, dominant) => {
       bybitPerpCoins,
     };
   } else if (coinType === "spot") {
-    const failedBinanceSpotSymbols = blackListData.spot.binance;
-    const failedBybitSpotSymbols = blackListData.spot.bybit;
-
+    const blackListBinanceSpotSymbols = await getDataFromRedis(
+      dataKeys.failedBinanceSpotSymbols
+    );
+    const blackListBybitSpotSymbols = await getDataFromRedis(
+      dataKeys.failedBybitSpotSymbols
+    );
     const binanceSpotCoins = binanceCoins
-      .filter((c) => !failedBinanceSpotSymbols.includes(c.symbol))
+      .filter((c) => !blackListBinanceSpotSymbols.includes(c.symbol))
       .sort((a, b) => a.symbol.localeCompare(b.symbol));
 
     const bybitSpotCoins = bybitCoins
-      .filter((c) => !failedBybitSpotSymbols.includes(c.symbol))
+      .filter((c) => !blackListBybitSpotSymbols.includes(c.symbol))
       .sort((a, b) => a.symbol.localeCompare(b.symbol));
 
     return {
