@@ -1,0 +1,57 @@
+API Endpoints
+
+Fetch Coin Objects from Redis
+Endpoint: api/coins/all
+Method: GET
+Description: Fetches an array of Coin objects from Redis.
+Parameters: None
+Coin Object Structure: { "symbol": "string", "category": "string", "imageUrl": "string", "exchanges": ["string"] }
+
+Store Coin Objects in Redis
+Endpoint: api/coins/store
+Method: GET
+Description: Fetches an array of Coin objects from MongoDB and stores it in Vercel Redis.
+Parameters: None
+
+Fetch Sorted Coin Objects from Redis
+Endpoint: api/coins/sorted
+Method: GET
+Description: Fetches an array of Coin objects from Redis, sorted by the dominant exchange.
+Parameters:
+coinType: "perp" | "spot"
+dominant: "Binance" | "Bybit"
+Returns: Array of Coin objects filtered by blacklist.
+
+Fetch Failed Coins from Redis
+Endpoint: api/coins/failed
+Method: GET
+Description: Fetches an array of failed coins from Redis.
+Parameters:
+coinType: "perp" | "spot"
+Returns: Array of failed coins for perp or spot.
+
+Fetch Black List from Redis
+Endpoint: api/coins/black-list
+Method: GET
+Description: Fetches the black list from Redis.
+Parameters: None
+Returns: Black list with counts and sorted arrays of coins for perp and spot for Binance and Bybit.
+
+Set Black List in Redis
+Endpoint: api/coins/black-list-set
+Method: POST
+Description: Sets the black list in Redis.
+Parameters: { "perp": { "binance": ["string"], "bybit": ["string"] }, "spot": { "binance": ["string"], "bybit": ["string"] } }
+Returns: { "success": true, "data": body } if the black list was set successfully.
+
+Clean Failed Coins in Redis
+Endpoint: api/coins/failed-clean
+Method: GET
+Description: Cleans failed coins in Redis.
+Parameters: None
+
+Fetch API Documentation
+Endpoint: api/docs/coins
+Method: GET
+Description: Returns the API documentation.
+Parameters: None
